@@ -1,22 +1,38 @@
-import threading
-import time
-In [ ]:
-In [ ]:
-In [ ]:
-In [ ]:
-examinationroom = threading.Semaphore(1)
-def enter_examination(num):
-global examinationroom
-print(f"patient {num} is waiting")
-examinationroom.acquire()
-print(f"patient {num} is in roon")
-time.sleep(2)
-print(f"patient {num} ")
-examinationroom.release()
-patients = []
-for i in range(10):
-patient_thread = threading.Thread(target=enter_examination, args=(i,))
-patients.append(patient_thread)
-patient_thread.start()
-for patient_thread in patients:
-patient_thread.join()
+
+import threading  
+import time 
+resource_a = threading.Lock()
+resource_b = threading.Lock()
+
+def thread_function_1():
+    with resource_a:  
+        print("Thread 1 acquired resource A")
+        
+        
+        time.sleep(1)
+        
+        print("Thread 1 waiting for resource B")
+        
+        with resource_b:  
+            print("Thread 1 acquired resource B")
+
+def thread_function_2():
+    with resource_b:  
+        print("Thread 2 acquired resource B")
+        
+       
+        time.sleep(1)
+        
+        print("Thread 2 waiting for resource A")
+        
+        with resource_a:  
+            print("Thread 2 acquired resource A")
+
+thread1 = threading.Thread(target=thread_function_1)
+thread2 = threading.Thread(target=thread_function_2)
+
+thread1.start()
+thread2.start()
+
+thread1.join()
+thread2.join(
