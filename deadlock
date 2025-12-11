@@ -1,1 +1,35 @@
-deadlock
+import threading  # Importing the threading module
+import time  # Importing the time module
+# Two resources
+resource_a = threading.Lock()
+resource_b = threading.Lock()
+# Thread function 1
+def thread_function_1():
+    with resource_a:  # Acquire resource A
+        print("Thread 1 acquired resource A")
+        
+        # Simulate some work
+        time.sleep(1)
+        
+        print("Thread 1 waiting for resource B")
+        
+        with resource_b:  # Attempt to acquire resource B
+            print("Thread 1 acquired resource B")
+# Thread function 2
+def thread_function_2():
+    with resource_b:  # Acquire resource B
+        print("Thread 2 acquired resource B")
+        
+        # Simulate some work
+        time.sleep(1)
+        
+        print("Thread 2 waiting for resource A")
+        
+        with resource_a:  # Attempt to acquire resource A
+            print("Thread 2 acquired resource A")
+# Create two threads
+thread1 = threading.Thread(target=thread_function_1)
+thread2 = threading.Thread(target=thread_function_2)
+# Start the threads
+thread1.start()
+thread2.start()
